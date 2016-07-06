@@ -6,27 +6,30 @@ package Main;
 public class SemaphoreImpl implements Semaphore {
     private final Object lock = new Object();
 
-    public int freePlaces;
+    public static volatile int freePlaces = PublicToilet.getNumberOfSeats();
 
-    public SemaphoreImpl(int freePlaces) {
-        this.freePlaces = freePlaces;
+    public static int getFreePlaces() {
+        return freePlaces;
     }
 
-    public void acquire() {
+    public static void setFreePlaces(int freePlaces) {
+        SemaphoreImpl.freePlaces = freePlaces;
+    }
+
+    public void acquire() throws InterruptedException {
         synchronized (lock) {
-            if (freePlaces > 0) {
-                freePlaces--;
+            if (getFreePlaces() > 0) {
+                setFreePlaces(freePlaces -= 1);
             } else {
-                while (freePlaces == 0) {
-                    try {
-                        lock.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                while (getFreePlaces() == 0) {
+                    lock.wait();
                 }
             }
         }
     }
+
+
+
 
     public void acquire(int permits) {
         synchronized (lock) {
@@ -46,7 +49,7 @@ public class SemaphoreImpl implements Semaphore {
         }
     }
 
-    public void release() {
+    public void release() throws InterruptedException {
         synchronized (lock) {
             freePlaces++;
             lock.notifyAll();
@@ -56,7 +59,7 @@ public class SemaphoreImpl implements Semaphore {
     public void release(int permits) {
         synchronized (lock) {
             freePlaces += permits;
-            lock.notifyAll();
+            lock.notify();
         }
     }
 

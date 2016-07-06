@@ -8,7 +8,7 @@ public interface Semaphore {
 
     // Запрашивает разрешение. Если есть свободное захватывает его. Если нет - приостанавливает поток до тех пор пока не появится свободное разрешение.
 
-    public void acquire();
+    public void acquire() throws InterruptedException;
 
     // Запрашивает переданое количество разрешений. Если есть переданое количество свободных разрешений захватывает их.
 
@@ -18,7 +18,7 @@ public interface Semaphore {
 
     // Отпускает разрешение возвращая его семафору.
 
-    public void release();
+    public void release() throws InterruptedException;
 
     // Отпускает переданое количество разрешений возварщая их семафору.
 

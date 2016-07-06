@@ -4,7 +4,7 @@ package Main;
  * Created by 7 on 05.07.2016.
  */
 public class Person implements Runnable {
-    SemaphoreImpl semaphore = new SemaphoreImpl(PublicToilet.getNumberOfSeats());
+    SemaphoreImpl semaphore = new SemaphoreImpl();
     private int personNumber;
 
     public Person(int personNumber) {
